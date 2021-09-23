@@ -1,6 +1,14 @@
 {
     "name": "agence-adeliom/easy-admin-user-bundle",
     "type": "symfony-bundle",
+    "keywords": ["symfony", "easyadmin", "user"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arnaud RITTI",
+            "homepage": "https://github.com/arnaud-ritti"
+        }
+    ],
     "require": {
         "php": "^7.4|^8.0",
         "ext-json": "*",
