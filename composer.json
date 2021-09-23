@@ -21,7 +21,7 @@
         "easycorp/easyadmin-bundle": "^3.4",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
-        "agence-adeliom/easy-common-bundle": "*@dev",
+        "agence-adeliom/easy-common-bundle": "^1.0",
         "symfonycasts/reset-password-bundle": "^1.8"
     },
     "autoload": {
