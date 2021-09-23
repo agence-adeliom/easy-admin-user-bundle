@@ -77,9 +77,8 @@ class EasyAdminUserProvider implements UserProviderInterface, PasswordUpgraderIn
      */
     public function upgradePassword(UserInterface $user, string $newHashedPassword): void
     {
-        $repository = $this->repository;
-        if ($repository instanceof PasswordUpgraderInterface) {
-            $repository->upgradePassword($user, $newHashedPassword);
+        if ($this->repository instanceof PasswordUpgraderInterface) {
+            $this->repository->upgradePassword($user, $newHashedPassword);
         }
     }
 
