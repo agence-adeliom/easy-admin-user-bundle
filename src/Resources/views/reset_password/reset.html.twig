@@ -1,0 +1,18 @@
+{% extends '@EasyAdminUser/reset_password/layout.html.twig' %}
+
+
+{% block page_title %}{{ "easy_admin_user.reset_password.reset"|trans }}{% endblock %}
+
+
+{% block content %}
+    {% form_theme resetForm '@EasyAdmin/symfony-form-themes/bootstrap_5_layout.html.twig' %}
+
+    <h3 class="text-center mb-3">{{ "easy_admin_user.reset_password.reset"|trans }}</h3>
+
+    {{ form_start(resetForm) }}
+    <div class="form-group">{{ form_row(resetForm.plainPassword) }}</div>
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary btn-lg btn-block w-100" onclick="this.form.submit(); this.disabled=true;">{{ "easy_admin_user.reset_password.reset_button"|trans }}</button>
+    </div>
+    {{ form_end(resetForm) }}
+{% endblock %}

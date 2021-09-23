@@ -1,0 +1,17 @@
+{% extends '@EasyAdminUser/reset_password/layout.html.twig' %}
+
+{% block page_title %}{{ "easy_admin_user.reset_password.check_email"|trans }}{% endblock %}
+
+{% block content %}
+    <h3 class="text-center mb-3">{{ "easy_admin_user.reset_password.check_email"|trans }}</h3>
+    <p>
+        {{ "easy_admin_user.reset_password.check_email_message"|trans({
+            '%expiration%': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')
+        })|raw }}
+    </p>
+    <p>
+        {{ "easy_admin_user.reset_password.check_email_message_infos"|trans({
+            '%link%': path('easy_admin_forgot_password_request')
+        })|raw }}
+    </p>
+{% endblock %}

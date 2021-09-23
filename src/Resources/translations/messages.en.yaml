@@ -1,0 +1,19 @@
+easy_admin_user:
+  manage_users: Manage administrators
+  new_user: New administrator
+  edit_user: Edit administrator
+  user: administrator
+  users: administrators
+  my_profile: My Profile
+  form:
+    firstname: Firstname
+    lastname: Lastname
+    email: Email address
+    password: Password
+    enabled: Enabled
+    roles: Roles
+  reset_password:
+    subject: Your password reset request
+
+ROLE_ADMIN : Administrator
+ROLE_SUPER_ADMIN : Super Administrator

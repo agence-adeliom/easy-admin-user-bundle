@@ -1,0 +1,22 @@
+{% extends '@EasyAdmin/page/login.html.twig' %}
+{% trans_default_domain ea is defined ? ea.i18n.translationDomain : (translation_domain is defined ? translation_domain ?? 'messages') %}
+
+{% block body_class 'page-login' %}
+{% block page_title %}{{ "easy_admin_user.login.title"|trans }}{% endblock %}
+
+{% block header_logo %}
+    {% set page_title = easy_admin_user.title %}
+    <div class="logo mb-4 mt-3 fs-3 fw-bold {{ page_title|length > 14 ? 'logo-long' }}">
+        {{ page_title|raw }}
+    </div>
+{% endblock header_logo %}
+
+{% block wrapper_wrapper %}
+    {{- parent() -}}
+
+    <style>
+        .btn-block{
+            width: 100%;
+        }
+    </style>
+{% endblock wrapper_wrapper %}

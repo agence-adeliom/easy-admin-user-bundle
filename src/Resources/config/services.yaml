@@ -1,0 +1,68 @@
+services:
+
+  Adeliom\EasyAdminUserBundle\Controller\:
+    resource: '../../Controller'
+    autowire: true
+    autoconfigure: true
+    tags: [ 'controller.service_arguments' ]
+
+  Adeliom\EasyAdminUserBundle\EventListener\DoctrineMappingListener:
+    arguments:
+      - '%easy_admin_user.user_class%'
+      - '%easy_admin_user.reset_password_class%'
+    tags:
+      - doctrine.event_subscriber
+
+  Adeliom\EasyAdminUserBundle\Controller\Security\EasyAdminResetPasswordController:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      - "@symfonycasts.reset_password.helper"
+      - "@parameter_bag"
+      - "@translator.default"
+      - "@easy_admin_user.user_repository"
+    tags: [ 'controller.service_arguments' ]
+
+  Adeliom\EasyAdminUserBundle\Command\AddUserCommand:
+    autowire: true
+    autoconfigure: true
+    arguments:
+      - "@doctrine.orm.entity_manager"
+      - "@security.password_hasher"
+      - "@easy_admin_user.validator"
+      - "@easy_admin_user.user_repository"
+    tags:
+      - { name: 'console.command', command: 'easy-admin:add-user' }
+
+  Adeliom\EasyAdminUserBundle\Utils\Validator:
+    autowire: true
+    autoconfigure: true
+
+  easy_admin_user.validator:
+    alias: Adeliom\EasyAdminUserBundle\Utils\Validator
+
+  easy_admin_user.authenticator:
+    class: Adeliom\EasyAdminUserBundle\Security\EasyAdminAuthenticator
+    arguments:
+      - '@router'
+
+  easy_admin_user.user_provider:
+    class: Adeliom\EasyAdminUserBundle\Security\EasyAdminUserProvider
+    arguments:
+      - '@easy_admin_user.user_repository'
+
+  easy_admin_user.user_repository:
+    class: '%easy_admin_user.user_repository%'
+    autowire: true
+    arguments:
+      - '@Doctrine\Persistence\ManagerRegistry'
+      - '%easy_admin_user.user_class%'
+    tags: ['doctrine.repository_service']
+
+  easy_admin_user.reset_password_repository:
+    class: '%easy_admin_user.reset_password_repository%'
+    autowire: true
+    arguments:
+      - '@Doctrine\Persistence\ManagerRegistry'
+      - '%easy_admin_user.reset_password_class%'
+    tags: [ doctrine.repository_service ]
