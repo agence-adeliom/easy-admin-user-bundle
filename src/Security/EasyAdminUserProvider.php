@@ -4,7 +4,6 @@ namespace Adeliom\EasyAdminUserBundle\Security;
 
 use Adeliom\EasyAdminUserBundle\Entity\User;
 use Adeliom\EasyAdminUserBundle\Repository\UserRepository;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
