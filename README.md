@@ -52,8 +52,7 @@ bin/console easy-admin:add-user
 ````
 ## Documentation
 
-TODO
-
+[Check it here](doc/index.md)
 
 ## License
 
