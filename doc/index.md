@@ -1,18 +1,3 @@
-# Setup database
-
-## Using doctrine migrations
-
-```bash
-php bin/console doctrine:migration:diff
-php bin/console doctrine:migration:migrate
-```
-
-## Without
-
-```bash
-php bin/console doctrine:schema:update --force
-```
-
 # Configure your firewall
 
 ## Configure encoders

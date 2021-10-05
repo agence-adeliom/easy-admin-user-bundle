@@ -22,6 +22,22 @@ Install with composer
 composer require agence-adeliom/easy-admin-user-bundle
 ```
 
+### Setup database
+
+#### Using doctrine migrations
+
+```bash
+php bin/console doctrine:migration:diff
+php bin/console doctrine:migration:migrate
+```
+
+#### Without
+
+```bash
+php bin/console doctrine:schema:update --force
+```
+
+
 ## Usage/Examples
 
 The `easy-admin:add-user` command creates new users and saves them in the database:
