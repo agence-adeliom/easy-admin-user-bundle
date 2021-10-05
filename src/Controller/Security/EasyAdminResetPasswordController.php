@@ -130,7 +130,7 @@ class EasyAdminResetPasswordController extends AbstractController
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
 
-            return $this->redirectToRoute('easy_admin_home');
+            return $this->redirectToRoute('easy_admin_login');
         }
 
         return $this->render('@EasyAdminUser/reset_password/reset.html.twig', [
