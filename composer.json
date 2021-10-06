@@ -1,6 +1,7 @@
 {
     "name": "agence-adeliom/easy-admin-user-bundle",
     "type": "symfony-bundle",
+    "version": "1.0.0",
     "description": "A Symfony bundle for EasyAdmin that provide basic user authentification flow",
     "keywords": ["symfony", "easyadmin", "user"],
     "homepage": "https://github.com/agence-adeliom/easy-admin-user-bundle",
