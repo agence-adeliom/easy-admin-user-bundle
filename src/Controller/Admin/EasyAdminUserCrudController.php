@@ -84,7 +84,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         foreach ($roles as $role => $sub){
             $rolesChoices[$role] = $role;
         }
-        if (in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])){
+        if (!$this->isGranted("ROLE_SUPER_ADMIN") && in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])){
             $accessibleRole = $this->get(RoleHierarchyInterface::class)->getReachableRoleNames($currentUser->getRoles());
             $rolesChoices = array_intersect_key($rolesChoices, array_flip($accessibleRole));
         }
