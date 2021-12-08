@@ -144,7 +144,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         return new RedirectResponse($referer);
     }
 
-    public static function getSubscribedServices()
+    public static function getSubscribedServices(): array
     {
         return array_merge(parent::getSubscribedServices(), [
             'security.password_hasher' => '?'.UserPasswordHasherInterface::class,
