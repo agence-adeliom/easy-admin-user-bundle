@@ -40,26 +40,16 @@ class AddUserCommand extends Command
 {
     // to make your command lazily loaded, configure the $defaultName static property,
     // so it will be instantiated only when the command is actually called.
+    /**
+     * @var string
+     */
     protected static $defaultName = 'easy-admin:add-user';
 
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private ?SymfonyStyle $io = null;
 
-    private $entityManager;
-    private $passwordHasher;
-    private $validator;
-    private $repository;
-
-    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, Validator $validator, UserRepository $repository)
+    public function __construct(private EntityManagerInterface $entityManager, private UserPasswordHasherInterface $passwordHasher, private Validator $validator, private UserRepository $repository)
     {
-        parent::__construct();
-
-        $this->entityManager = $em;
-        $this->passwordHasher = $passwordHasher;
-        $this->validator = $validator;
-        $this->repository = $repository;
+        parent::__construct(static::$defaultName);
     }
 
     /**
@@ -101,7 +91,7 @@ class AddUserCommand extends Command
      * quite a lot of work. However, if the command is meant to be used by external
      * users, this method is a nice way to fall back and prevent errors.
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if (null !== $input->getArgument('password') && null !== $input->getArgument('email')) {
             return;
@@ -158,7 +148,6 @@ class AddUserCommand extends Command
         if($isSuperAdmin){
             $role = "ROLE_SUPER_ADMIN";
         }
-
         // make sure to validate the user data is correct
         $this->validateUserData($email, $plainPassword);
         $userClass = $this->repository->getClassName();
@@ -184,7 +173,7 @@ class AddUserCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function validateUserData($email, $plainPassword): void
+    private function validateUserData($email, ?string $plainPassword): void
     {
         // first check if a user with the same username already exists.
         $existingUser = $this->repository->findOneBy(['email' => $email]);

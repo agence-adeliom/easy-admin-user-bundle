@@ -18,10 +18,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
  */
 class Configuration implements ConfigurationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('easy_admin_user');
         $rootNode    = $treeBuilder->getRootNode();
@@ -30,10 +27,10 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('user_class')
-                    ->isRequired()
+                    ->defaultValue(User::class)
                     ->validate()
                         ->ifString()
-                        ->then(function($value) {
+                        ->then(function($value): string {
                             if (!class_exists($value) || !is_a($value, User::class, true)) {
                                 throw new InvalidConfigurationException(sprintf(
                                     'User class must be a valid class extending %s. "%s" given.',
@@ -48,7 +45,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(UserRepository::class)
                     ->validate()
                         ->ifString()
-                        ->then(function($value) {
+                        ->then(function($value): string {
                             if (!class_exists($value) || !is_a($value, UserRepository::class, true)) {
                                 throw new InvalidConfigurationException(sprintf(
                                     'User repository must be a valid class extending %s. "%s" given.',
@@ -60,10 +57,10 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('reset_password_class')
-                    ->isRequired()
+                    ->defaultValue(ResetPasswordRequest::class)
                     ->validate()
                         ->ifString()
-                        ->then(function($value) {
+                        ->then(function($value): string {
                             if (!class_exists($value) || !is_a($value, ResetPasswordRequest::class, true)) {
                                 throw new InvalidConfigurationException(sprintf(
                                     'Reset password class must be a valid class extending %s. "%s" given.',
@@ -78,7 +75,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(ResetPasswordRequestRepository::class)
                     ->validate()
                         ->ifString()
-                        ->then(function($value) {
+                        ->then(function($value): string {
                             if (!class_exists($value) || !is_a($value, ResetPasswordRequestRepository::class, true)) {
                                 throw new InvalidConfigurationException(sprintf(
                                     'Reset password repository must be a valid class extending %s. "%s" given.',

@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class EasyAdminUserBundle extends Bundle
 {
-    public function getContainerExtension()
+    public function getContainerExtension(): EasyAdminUserExtension
     {
         return new EasyAdminUserExtension();
     }

@@ -22,14 +22,11 @@ class EasyAdminAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'easy_admin_login';
 
-    private UrlGeneratorInterface $urlGenerator;
-
-    public function __construct(UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
-        $this->urlGenerator = $urlGenerator;
     }
 
-    public function authenticate(Request $request): PassportInterface
+    public function authenticate(Request $request): Passport
     {
         $email = $request->request->get('email', '');
 
