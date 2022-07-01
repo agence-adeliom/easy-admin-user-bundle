@@ -22,6 +22,55 @@ Install with composer
 composer require agence-adeliom/easy-admin-user-bundle
 ```
 
+### Extends User classes
+
+````php
+<?php
+
+namespace App\Entity;
+
+use App\Repository\UserRepository;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: '`user`')]
+class User extends \Adeliom\EasyAdminUserBundle\Entity\User implements UserInterface, PasswordAuthenticatedUserInterface
+{
+}
+```
+
+### Extends User repository
+
+```php
+<?php
+
+namespace App\Repository;
+
+use App\Entity\User;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+
+class UserRepository extends \Adeliom\EasyAdminUserBundle\Repository\UserRepository implements PasswordUpgraderInterface
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, User::class);
+    }
+}
+```
+
+### Declare the user classes in the bundle config
+create a file named `easy_admin_bundle.yaml` in `src/config/packages/`
+
+and add the mapping :
+```yaml
+easy_admin_user:
+    user_class: App\Entity\User
+    user_repository: App\Repository\UserRepository
+```
+
 ### Setup database
 
 #### Using doctrine migrations
