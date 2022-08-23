@@ -7,68 +7,43 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @UniqueEntity("email")
- * @ORM\HasLifecycleCallbacks()
- * @ORM\MappedSuperclass(repositoryClass="Adeliom\EasyAdminUserBundle\Repository\UserRepository")
- */
+#[UniqueEntity('email')]
+#[ORM\HasLifecycleCallbacks]
+#[ORM\MappedSuperclass(repositoryClass: 'Adeliom\EasyAdminUserBundle\Repository\UserRepository')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     const SUPER_ADMIN = "ROLE_SUPER_ADMIN";
     const ADMIN = "ROLE_ADMIN";
-
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private $id;
-
-    /**
-     * @ORM\Column(type="boolean")
-     */
+    #[ORM\Column(type: 'boolean')]
     private $enabled = true;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $firstname = null;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $lastname = null;
-
-    /**
-     * @ORM\Column(type="string", length=255, unique=true)
-     */
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     private $email;
-
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private $roles = [];
-
     /**
      * @var string|null The plain password
      */
     private $plainPassword;
-
     /**
      * @var string The hashed password
-     * @ORM\Column(type="string")
      */
+    #[ORM\Column(type: 'string')]
     private $password;
-
     public function getId(): ?int
     {
         return $this->id;
     }
-
     public function getFullname(){
         return implode(" ", [$this->firstname, $this->lastname]);
     }
-
     /**
      * @return null
      */
@@ -76,7 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->firstname;
     }
-
     /**
      * @param null $firstname
      */
@@ -84,7 +58,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->firstname = $firstname;
     }
-
     /**
      * @return null
      */
@@ -92,7 +65,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->lastname;
     }
-
     /**
      * @param null $lastname
      */
@@ -100,7 +72,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->lastname = $lastname;
     }
-
     /**
      * @param bool $enabled
      */
@@ -108,7 +79,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->enabled = $enabled;
     }
-
     /**
      * @return bool
      */
@@ -116,7 +86,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->enabled;
     }
-
     /**
      * @return string|null
      */
@@ -124,7 +93,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->plainPassword;
     }
-
     /**
      * @param string $plainPassword
      */
@@ -132,19 +100,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->plainPassword = $plainPassword;
     }
-
     public function getEmail(): ?string
     {
         return $this->email;
     }
-
     public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
-
     /**
      * A visual identifier that represents this user.
      *
@@ -154,7 +119,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
-
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
      */
@@ -162,7 +126,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->getUserIdentifier();
     }
-
     /**
      * @see UserInterface
      */
@@ -174,14 +137,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
         return $this->roles;
     }
-
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
         return $this;
     }
-
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -189,14 +150,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->password;
     }
-
     public function setPassword(string $password): self
     {
         $this->password = $password;
         $this->eraseCredentials();
         return $this;
     }
-
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
@@ -207,7 +166,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return null;
     }
-
     /**
      * @see UserInterface
      */
