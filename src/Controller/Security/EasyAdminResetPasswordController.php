@@ -2,11 +2,10 @@
 
 namespace Adeliom\EasyAdminUserBundle\Controller\Security;
 
-use UnitEnum;
-use Doctrine\Persistence\ManagerRegistry;
 use Adeliom\EasyAdminUserBundle\Form\ChangePasswordFormType;
 use Adeliom\EasyAdminUserBundle\Form\ResetPasswordRequestFormType;
 use Adeliom\EasyAdminUserBundle\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -27,10 +26,28 @@ class EasyAdminResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
 
-    private mixed $userClass = null;
+    /**
+     * @var mixed
+     */
+    private $userClass = null;
 
-    public function __construct(private ResetPasswordHelperInterface $resetPasswordHelper, private ParameterBagInterface $parameterBag, private TranslatorInterface $translator, private UserRepository $repository, private ManagerRegistry $managerRegistry)
-    {
+    public function __construct(/**
+         * @readonly
+         */
+        private ResetPasswordHelperInterface $resetPasswordHelper, /**
+         * @readonly
+         */
+        private ParameterBagInterface $parameterBag, /**
+         * @readonly
+         */
+        private TranslatorInterface $translator, /**
+         * @readonly
+         */
+        private UserRepository $repository, /**
+         * @readonly
+         */
+        private ManagerRegistry $managerRegistry
+    ) {
         $this->userClass = $parameterBag->get('easy_admin_user.user_class');
     }
 
@@ -38,7 +55,7 @@ class EasyAdminResetPasswordController extends AbstractController
      * Display & process form to request a password reset.
      */
     #[Route(path: '', name: 'easy_admin_forgot_password_request')]
-    public function request(Request $request, MailerInterface $mailer) : Response
+    public function request(Request $request, MailerInterface $mailer): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
@@ -48,6 +65,7 @@ class EasyAdminResetPasswordController extends AbstractController
                 $mailer
             );
         }
+
         return $this->render('@EasyAdminUser/reset_password/request.html.twig', [
             'requestForm' => $form->createView(),
         ]);
@@ -57,13 +75,14 @@ class EasyAdminResetPasswordController extends AbstractController
      * Confirmation page after a user has requested a password reset.
      */
     #[Route(path: '/check-email', name: 'easy_admin_check_email')]
-    public function checkEmail() : Response
+    public function checkEmail(): Response
     {
         // Generate a fake token if the user does not exist or someone hit this page directly.
         // This prevents exposing whether or not a user was found with the given email address or not
         if (null === ($resetToken = $this->getTokenObjectFromSession())) {
             $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
         }
+
         return $this->render('@EasyAdminUser/reset_password/check_email.html.twig', [
             'resetToken' => $resetToken,
         ]);
@@ -73,7 +92,7 @@ class EasyAdminResetPasswordController extends AbstractController
      * Validates and process the reset URL that the user clicked in their email.
      */
     #[Route(path: '/reset/{token}', name: 'easy_admin_reset_password')]
-    public function reset(Request $request, UserPasswordHasherInterface $passwordEncoder, string $token = null) : Response
+    public function reset(Request $request, UserPasswordHasherInterface $passwordEncoder, string $token = null): Response
     {
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
@@ -82,17 +101,20 @@ class EasyAdminResetPasswordController extends AbstractController
 
             return $this->redirectToRoute('easy_admin_reset_password');
         }
+
         $token = $this->getTokenFromSession();
         if (null === $token) {
             throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
         }
+
         try {
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
-        } catch (ResetPasswordExceptionInterface $e) {
-            $this->addFlash('reset_password_error', $e->getReason());
+        } catch (ResetPasswordExceptionInterface $resetPasswordException) {
+            $this->addFlash('reset_password_error', $resetPasswordException->getReason());
 
             return $this->redirectToRoute('easy_admin_forgot_password_request');
         }
+
         // The token is valid; allow the user to change their password.
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
@@ -114,6 +136,7 @@ class EasyAdminResetPasswordController extends AbstractController
 
             return $this->redirectToRoute('easy_admin_login');
         }
+
         return $this->render('@EasyAdminUser/reset_password/reset.html.twig', [
             'resetForm' => $form->createView(),
         ]);
@@ -125,7 +148,7 @@ class EasyAdminResetPasswordController extends AbstractController
             'email' => $emailFormData,
         ]);
         // Do not reveal whether a user account was found or not.
-        if (!$user) {
+        if (!$user instanceof \Adeliom\EasyAdminUserBundle\Entity\User) {
             return $this->redirectToRoute('easy_admin_check_email');
         }
 
@@ -149,7 +172,7 @@ class EasyAdminResetPasswordController extends AbstractController
         $email = (new TemplatedEmail())
             ->from(new Address($config["from_address"], $config["from_name"]))
             ->to($user->getEmail())
-            ->subject( $this->translator->trans('easy_admin_user.reset_password.subject'))
+            ->subject($this->translator->trans('easy_admin_user.reset_password.subject'))
             ->htmlTemplate('@EasyAdminUser/reset_password/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,

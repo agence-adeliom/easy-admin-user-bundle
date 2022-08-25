@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+
 use function Symfony\Component\String\u;
 
 /**
@@ -47,8 +48,20 @@ class AddUserCommand extends Command
 
     private ?SymfonyStyle $io = null;
 
-    public function __construct(private EntityManagerInterface $entityManager, private UserPasswordHasherInterface $passwordHasher, private Validator $validator, private UserRepository $repository)
-    {
+    public function __construct(/**
+         * @readonly
+         */
+        private EntityManagerInterface $entityManager, /**
+         * @readonly
+         */
+        private UserPasswordHasherInterface $passwordHasher, /**
+         * @readonly
+         */
+        private Validator $validator, /**
+         * @readonly
+         */
+        private UserRepository $repository
+    ) {
         parent::__construct(static::$defaultName);
     }
 
@@ -104,28 +117,27 @@ class AddUserCommand extends Command
             '',
             ' $ php bin/console easy-admin:add-user email@example.com password',
             '',
-            'Now we\'ll ask you for the value of all the missing command arguments.',
+            "Now we'll ask you for the value of all the missing command arguments.",
         ]);
 
 
         // Ask for the email if it's not defined
         $email = $input->getArgument('email');
         if (null !== $email) {
-            $this->io->text(' > <info>Email</info>: '.$email);
+            $this->io->text(' > <info>Email</info>: ' . $email);
         } else {
-            $email = $this->io->ask('Email', null, [$this->validator, 'validateEmail']);
+            $email = $this->io->ask('Email', null, \Closure::fromCallable(fn(?string $email): string => $this->validator->validateEmail($email)));
             $input->setArgument('email', $email);
         }
 
         // Ask for the password if it's not defined
         $password = $input->getArgument('password');
         if (null !== $password) {
-            $this->io->text(' > <info>Password</info>: '.u('*')->repeat(u($password)->length()));
+            $this->io->text(' > <info>Password</info>: ' . u('*')->repeat(u($password)->length()));
         } else {
-            $password = $this->io->askHidden('Password (your type will be hidden)', [$this->validator, 'validatePassword']);
+            $password = $this->io->askHidden('Password (your type will be hidden)', \Closure::fromCallable(fn(?string $plainPassword): string => $this->validator->validatePassword($plainPassword)));
             $input->setArgument('password', $password);
         }
-
     }
 
     /**
@@ -142,12 +154,14 @@ class AddUserCommand extends Command
         $isAdmin = $input->getOption('admin');
         $isSuperAdmin = $input->getOption('super-admin');
         $role = "ROLE_USER";
-        if($isAdmin){
+        if ($isAdmin) {
             $role = "ROLE_ADMIN";
         }
-        if($isSuperAdmin){
+
+        if ($isSuperAdmin) {
             $role = "ROLE_SUPER_ADMIN";
         }
+
         // make sure to validate the user data is correct
         $this->validateUserData($email, $plainPassword);
         $userClass = $this->repository->getClassName();

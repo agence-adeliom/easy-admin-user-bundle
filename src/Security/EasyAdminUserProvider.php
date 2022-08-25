@@ -30,7 +30,7 @@ class EasyAdminUserProvider implements UserProviderInterface, PasswordUpgraderIn
     {
         $user = $this->repository->findOneBy(['email' => $identifier]);
 
-        if (null === $user) {
+        if (!$user instanceof \Adeliom\EasyAdminUserBundle\Entity\User) {
             $e = new UserNotFoundException(sprintf('User "%s" not found.', $identifier));
             $e->setUserIdentifier($identifier);
 

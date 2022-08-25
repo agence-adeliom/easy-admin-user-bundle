@@ -2,11 +2,11 @@
 
 namespace Adeliom\EasyAdminUserBundle\Controller\Admin;
 
-use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
-use Iterator;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
+use EasyCorp\Bundle\EasyAdminBundle\Contracts\Menu\MenuItemInterface;
+use Iterator;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 trait EasyAdminUserTrait

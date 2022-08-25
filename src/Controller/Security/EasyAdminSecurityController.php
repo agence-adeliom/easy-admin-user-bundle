@@ -11,11 +11,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class EasyAdminSecurityController extends AbstractController
 {
     #[Route(path: '/admin/login', name: 'easy_admin_login')]
-    public function login(AuthenticationUtils $authenticationUtils) : Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()) {
+        if ($this->getUser() !== null) {
              return $this->redirectToRoute('target_path');
         }
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -41,8 +42,11 @@ class EasyAdminSecurityController extends AbstractController
         ]);
     }
 
+    /**
+     * @return never
+     */
     #[Route(path: '/admin/logout', name: 'easy_admin_logout')]
-    public function logout() : void
+    public function logout(): \Symfony\Component\HttpFoundation\Response
     {
         throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }

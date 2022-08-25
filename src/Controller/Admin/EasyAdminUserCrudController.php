@@ -25,16 +25,33 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class EasyAdminUserCrudController extends AbstractCrudController
 {
-    public function __construct(private AdminContextProvider $adminContextProvider, private ParameterBagInterface $parameterBag, private RoleHierarchyInterface $roleHierarchy, private TranslatorInterface $translator)
-    {
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private AdminContextProvider $adminContextProvider,
+        /**
+         * @readonly
+         */
+        private ParameterBagInterface $parameterBag,
+        /**
+         * @readonly
+         */
+        private RoleHierarchyInterface $roleHierarchy,
+        /**
+         * @readonly
+         */
+        private TranslatorInterface $translator
+    ) {
     }
+
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
             ->setPageTitle(Crud::PAGE_INDEX, "easy_admin_user.manage_users")
             ->setPageTitle(Crud::PAGE_NEW, "easy_admin_user.new_user")
             ->setPageTitle(Crud::PAGE_EDIT, "easy_admin_user.edit_user")
-            ->setPageTitle(Crud::PAGE_DETAIL, fn($entity): string => sprintf('%s<br/><small>%s</small>', $entity->getFullName(), $entity->getEmail()))
+            ->setPageTitle(Crud::PAGE_DETAIL, static fn($entity): string => sprintf('%s<br/><small>%s</small>', $entity->getFullName(), $entity->getEmail()))
             ->setEntityLabelInSingular('easy_admin_user.user')
             ->setEntityLabelInPlural('easy_admin_user.users')
             ->setFormOptions([
@@ -49,20 +66,20 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         $actions = parent::configureActions($actions);
         $currentUser = $this->getUser();
 
-        $impersonate = Action::new('impersonate', 'easy_admin_user.impersonate', 'fa fa-user-secret')->linkToCrudAction("impersonate")->setCssClass("btn btn-info")->displayIf(fn(User $entity): bool => $currentUser->getUserIdentifier() !== $entity->getEmail());
+        $impersonate = Action::new('impersonate', 'easy_admin_user.impersonate', 'fa fa-user-secret')->linkToCrudAction("impersonate")->setCssClass("btn btn-info")->displayIf(static fn(User $entity): bool => $currentUser->getUserIdentifier() !== $entity->getEmail());
         $actions
             ->add(Crud::PAGE_DETAIL, $impersonate)
             ->add(Crud::PAGE_EDIT, $impersonate)
             ->setPermission("impersonate", "ROLE_ALLOWED_TO_SWITCH");
 
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
-        $actions->update(Crud::PAGE_INDEX, Action::DELETE, function (Action $action) use ($currentUser): Action{
-            $action->displayIf(fn(User $entity): bool => $currentUser->getUserIdentifier() !== $entity->getEmail());
+        $actions->update(Crud::PAGE_INDEX, Action::DELETE, static function (Action $action) use ($currentUser): Action {
+            $action->displayIf(static fn(User $entity): bool => $currentUser->getUserIdentifier() !== $entity->getEmail());
             return $action;
         });
 
-        $actions->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $action) use ($currentUser): Action{
-            $action->displayIf(fn(User $entity): bool => $currentUser->getUserIdentifier() !== $entity->getEmail());
+        $actions->update(Crud::PAGE_DETAIL, Action::DELETE, static function (Action $action) use ($currentUser): Action {
+            $action->displayIf(static fn(User $entity): bool => $currentUser->getUserIdentifier() !== $entity->getEmail());
             return $action;
         });
 
@@ -76,10 +93,11 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         $subject = $context->getEntity()->getInstance();
         $roles = $this->parameterBag->get('security.role_hierarchy.roles');
         $rolesChoices = [];
-        foreach ($roles as $role => $sub){
+        foreach ($roles as $role => $sub) {
             $rolesChoices[$role] = $role;
         }
-        if (!$this->isGranted("ROLE_SUPER_ADMIN") && in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])){
+
+        if (!$this->isGranted("ROLE_SUPER_ADMIN") && in_array($pageName, [Crud::PAGE_NEW, Crud::PAGE_EDIT])) {
             $accessibleRole = $this->roleHierarchy->getReachableRoleNames($currentUser->getRoles());
             $rolesChoices = array_intersect_key($rolesChoices, array_flip($accessibleRole));
         }
@@ -89,7 +107,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         yield EmailField::new("email", 'easy_admin_user.form.email')->setRequired(true)->setColumns('col-12 col-sm-6');
         yield TextField::new("plainPassword", 'easy_admin_user.form.password')->setRequired($pageName == Crud::PAGE_NEW)->setColumns('col-12 col-sm-6')->onlyOnForms();
 
-        if(!$subject || ($pageName == Crud::PAGE_DETAIL) || ($pageName == Crud::PAGE_NEW) || ($pageName == Crud::PAGE_EDIT && $currentUser->getUserIdentifier() !== $subject->getEmail())){
+        if (!$subject || ($pageName == Crud::PAGE_DETAIL) || ($pageName == Crud::PAGE_NEW) || ($pageName == Crud::PAGE_EDIT && $currentUser->getUserIdentifier() !== $subject->getEmail())) {
             yield BooleanField::new("enabled", 'easy_admin_user.form.enabled')->renderAsSwitch($pageName != Crud::PAGE_INDEX)->setColumns('col-12 col-sm-6');
             yield ChoiceField::new("roles", 'easy_admin_user.form.roles')->setColumns('col-12 col-sm-6')
                 ->setRequired(true)
@@ -110,10 +128,11 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if(!empty($entityInstance->getPlainPassword())){
+        if (!empty($entityInstance->getPlainPassword())) {
             $password = $this->get("security.password_hasher")->hashPassword($entityInstance, $entityInstance->getPlainPassword());
             $entityInstance->setPassword($password);
         }
+
         parent::updateEntity($entityManager, $entityInstance);
     }
 
@@ -126,8 +145,8 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         $user = $context->getEntity()->getInstance();
         $referer = $context->getRequest()->headers->get('referer');
         /** @var UserInterface $user */
-        if($user){
-            $referer .= $referer.(parse_url($referer, PHP_URL_QUERY) ? '&' : '?').'_switch_user='.$user->getUserIdentifier();
+        if ($user) {
+            $referer .= $referer . (parse_url($referer, PHP_URL_QUERY) ? '&' : '?') . '_switch_user=' . $user->getUserIdentifier();
             $this->addFlash('success', $this->translator->trans(
                 'easy_admin_user.flashes.impersonate',
                 [
@@ -145,11 +164,10 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
     public static function getSubscribedServices(): array
     {
         return array_merge(parent::getSubscribedServices(), [
-            'security.password_hasher' => '?'.UserPasswordHasherInterface::class,
-            TranslatorInterface::class => '?'.TranslatorInterface::class,
-            RoleHierarchyInterface::class => '?'.RoleHierarchyInterface::class,
-            ParameterBagInterface::class => '?'.ParameterBagInterface::class,
+            'security.password_hasher' => '?' . UserPasswordHasherInterface::class,
+            TranslatorInterface::class => '?' . TranslatorInterface::class,
+            RoleHierarchyInterface::class => '?' . RoleHierarchyInterface::class,
+            ParameterBagInterface::class => '?' . ParameterBagInterface::class,
         ]);
     }
-
 }

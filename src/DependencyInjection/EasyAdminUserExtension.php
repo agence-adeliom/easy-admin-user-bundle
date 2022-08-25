@@ -8,7 +8,6 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-
 class EasyAdminUserExtension extends Extension implements PrependExtensionInterface
 {
     /**
@@ -20,10 +19,10 @@ class EasyAdminUserExtension extends Extension implements PrependExtensionInterf
         $config        = $this->processConfiguration($configuration, $configs);
 
         foreach ($config as $key => $value) {
-            $container->setParameter('easy_admin_user.'.$key, $value);
+            $container->setParameter('easy_admin_user.' . $key, $value);
         }
 
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yaml');
     }
 
@@ -37,9 +36,10 @@ class EasyAdminUserExtension extends Extension implements PrependExtensionInterf
         $twigConfig = [];
 
         $twigConfig['globals']['easy_admin_user'] = [];
-        foreach ($config as $k=>$v){
+        foreach ($config as $k => $v) {
             $twigConfig['globals']['easy_admin_user'][$k] = $v;
         }
+
         $container->prependExtensionConfig('twig', $twigConfig);
     }
 

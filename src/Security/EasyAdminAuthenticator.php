@@ -20,10 +20,17 @@ class EasyAdminAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
+    /**
+     * @var string
+     */
     public const LOGIN_ROUTE = 'easy_admin_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private UrlGeneratorInterface $urlGenerator
+    ) {
     }
 
     public function authenticate(Request $request): Passport

@@ -9,41 +9,60 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[UniqueEntity('email')]
 #[ORM\HasLifecycleCallbacks]
-#[ORM\MappedSuperclass(repositoryClass: 'Adeliom\EasyAdminUserBundle\Repository\UserRepository')]
+#[ORM\MappedSuperclass(repositoryClass: \Adeliom\EasyAdminUserBundle\Repository\UserRepository::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    const SUPER_ADMIN = "ROLE_SUPER_ADMIN";
-    const ADMIN = "ROLE_ADMIN";
+    /**
+     * @var string
+     */
+    public const SUPER_ADMIN = "ROLE_SUPER_ADMIN";
+
+    /**
+     * @var string
+     */
+    public const ADMIN = "ROLE_ADMIN";
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private $id;
-    #[ORM\Column(type: 'boolean')]
-    private $enabled = true;
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $firstname = null;
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private $lastname = null;
-    #[ORM\Column(type: 'string', length: 255, unique: true)]
-    private $email;
-    #[ORM\Column(type: 'json')]
-    private $roles = [];
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::INTEGER)]
+    private ?int $id = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
+    private ?bool $enabled = true;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    private ?string $firstname = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
+    private ?string $lastname = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, unique: true)]
+    private ?string $email = null;
+
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
+    private array $roles = [];
+
     /**
      * @var string|null The plain password
      */
-    private $plainPassword;
+    private ?string $plainPassword = null;
+
     /**
      * @var string The hashed password
      */
-    #[ORM\Column(type: 'string')]
-    private $password;
+    #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING)]
+    private ?string $password = null;
+
     public function getId(): ?int
     {
         return $this->id;
     }
-    public function getFullname(){
+
+    public function getFullname()
+    {
         return implode(" ", [$this->firstname, $this->lastname]);
     }
+
     /**
      * @return null
      */
@@ -51,6 +70,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->firstname;
     }
+
     /**
      * @param null $firstname
      */
@@ -58,6 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->firstname = $firstname;
     }
+
     /**
      * @return null
      */
@@ -65,6 +86,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->lastname;
     }
+
     /**
      * @param null $lastname
      */
@@ -72,20 +94,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->lastname = $lastname;
     }
-    /**
-     * @param bool $enabled
-     */
+
     public function setEnabled(bool $enabled): void
     {
         $this->enabled = $enabled;
     }
-    /**
-     * @return bool
-     */
+
     public function isEnabled(): bool
     {
         return $this->enabled;
     }
+
     /**
      * @return string|null
      */
@@ -93,23 +112,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->plainPassword;
     }
-    /**
-     * @param string $plainPassword
-     */
+
     public function setPlainPassword(string $plainPassword): void
     {
         $this->plainPassword = $plainPassword;
     }
+
     public function getEmail(): ?string
     {
         return $this->email;
     }
+
     public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -119,6 +139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
+
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
      */
@@ -126,6 +147,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->getUserIdentifier();
     }
+
     /**
      * @see UserInterface
      */
@@ -135,14 +157,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if (!in_array('ROLE_USER', $this->roles)) {
             $this->roles[] = 'ROLE_USER';
         }
+
         return $this->roles;
     }
+
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
 
         return $this;
     }
+
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -150,12 +175,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->password;
     }
+
     public function setPassword(string $password): self
     {
         $this->password = $password;
         $this->eraseCredentials();
         return $this;
     }
+
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
@@ -166,6 +193,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return null;
     }
+
     /**
      * @see UserInterface
      */
