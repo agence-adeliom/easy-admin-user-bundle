@@ -120,7 +120,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        $password = $this->get("security.password_hasher")->hashPassword($entityInstance, $entityInstance->getPlainPassword());
+        $password = $this->container->get("security.password_hasher")->hashPassword($entityInstance, $entityInstance->getPlainPassword());
         $entityInstance->setPassword($password);
         parent::persistEntity($entityManager, $entityInstance);
     }
@@ -129,7 +129,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if (!empty($entityInstance->getPlainPassword())) {
-            $password = $this->get("security.password_hasher")->hashPassword($entityInstance, $entityInstance->getPlainPassword());
+            $password = $this->container->get("security.password_hasher")->hashPassword($entityInstance, $entityInstance->getPlainPassword());
             $entityInstance->setPassword($password);
         }
 

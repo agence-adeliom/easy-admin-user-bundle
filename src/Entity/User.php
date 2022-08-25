@@ -15,12 +15,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string
      */
-    public const SUPER_ADMIN = "ROLE_SUPER_ADMIN";
+    public const SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
     /**
      * @var string
      */
-    public const ADMIN = "ROLE_ADMIN";
+    public const ADMIN = 'ROLE_ADMIN';
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -60,37 +60,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFullname()
     {
-        return implode(" ", [$this->firstname, $this->lastname]);
+        return implode(' ', [$this->firstname, $this->lastname]);
     }
 
-    /**
-     * @return null
-     */
-    public function getFirstname()
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    /**
-     * @param null $firstname
-     */
-    public function setFirstname($firstname): void
+    public function setFirstname(?string $firstname): void
     {
         $this->firstname = $firstname;
     }
 
-    /**
-     * @return null
-     */
-    public function getLastname()
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    /**
-     * @param null $lastname
-     */
-    public function setLastname($lastname): void
+    public function setLastname(?string $lastname): void
     {
         $this->lastname = $lastname;
     }
@@ -105,10 +93,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->enabled;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -180,6 +165,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->password = $password;
         $this->eraseCredentials();
+
         return $this;
     }
 
@@ -197,7 +183,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @see UserInterface
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         $this->plainPassword = null;
