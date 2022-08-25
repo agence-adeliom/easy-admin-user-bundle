@@ -1,0 +1,42 @@
+easy_admin_user:
+  manage_users: Gérer les administrateurs
+  new_user: Nouvel administrateur
+  edit_user: Modifier l'administrator
+  user: administrateur
+  users: Administrateurs
+  my_profile: Mon compte
+  impersonate: "Voir en tant que cet utilisateur"
+  form:
+    firstname: Prénom
+    lastname: Nom
+    email: Adresse email
+    password: Mot de passe
+    enabled: Activé
+    roles: Rôles
+  reset_password:
+    reset: Réinitialiser votre mot de passe
+    check_email: E-mail de réinitialisation du mot de passe envoyé
+    request_help: Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+    request_error: Veuillez entrer votre email
+    request_button: Envoyer la demande
+    reset_button: Réinitialiser
+    new_password: Nouveau mot de passe
+    comfirm_new_password: Comfirmation du mot de passe
+    subject: Réinitialisation de votre mot de passe
+    check_email_message: |
+      S'il existe un compte correspondant à votre e-mail, un e-mail vient d'être envoyé contenant un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.<br>
+      Ce lien expirera dans <b>%expiration%</b>.
+    check_email_message_infos: |
+      Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam ou <a href="%link%">réessayer</a>.
+  login:
+    title: Connexion
+    username: Identifiant
+    password: Mot de passe
+    forgot_password: Mot de passe oublié
+    login: Se connecter
+    remember_me: Se souvenir de moi
+  flashes:
+    impersonate: "Vous voyez maintenant l'interface d'administration en tant que %name%."
+
+ROLE_ADMIN : Administrateur
+ROLE_SUPER_ADMIN : Super Administrateur
