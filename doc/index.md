@@ -5,7 +5,7 @@
 ```yaml
 security:
     ...
-    encoders:
+    password_hashers:
         ...
         Adeliom\EasyAdminUserBundle\Entity\User: argon2i
 ```
