@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
+
 use function Symfony\Component\String\u;
 
 /**
@@ -40,26 +41,28 @@ class AddUserCommand extends Command
 {
     // to make your command lazily loaded, configure the $defaultName static property,
     // so it will be instantiated only when the command is actually called.
+    /**
+     * @var string
+     */
     protected static $defaultName = 'easy-admin:add-user';
 
-    /**
-     * @var SymfonyStyle
-     */
-    private $io;
+    private ?SymfonyStyle $io = null;
 
-    private $entityManager;
-    private $passwordHasher;
-    private $validator;
-    private $repository;
-
-    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher, Validator $validator, UserRepository $repository)
-    {
-        parent::__construct();
-
-        $this->entityManager = $em;
-        $this->passwordHasher = $passwordHasher;
-        $this->validator = $validator;
-        $this->repository = $repository;
+    public function __construct(/**
+         * @readonly
+         */
+        private EntityManagerInterface $entityManager, /**
+         * @readonly
+         */
+        private UserPasswordHasherInterface $passwordHasher, /**
+         * @readonly
+         */
+        private Validator $validator, /**
+         * @readonly
+         */
+        private UserRepository $repository
+    ) {
+        parent::__construct(static::$defaultName);
     }
 
     /**
@@ -101,7 +104,7 @@ class AddUserCommand extends Command
      * quite a lot of work. However, if the command is meant to be used by external
      * users, this method is a nice way to fall back and prevent errors.
      */
-    protected function interact(InputInterface $input, OutputInterface $output)
+    protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if (null !== $input->getArgument('password') && null !== $input->getArgument('email')) {
             return;
@@ -114,16 +117,15 @@ class AddUserCommand extends Command
             '',
             ' $ php bin/console easy-admin:add-user email@example.com password',
             '',
-            'Now we\'ll ask you for the value of all the missing command arguments.',
+            "Now we'll ask you for the value of all the missing command arguments.",
         ]);
-
 
         // Ask for the email if it's not defined
         $email = $input->getArgument('email');
         if (null !== $email) {
             $this->io->text(' > <info>Email</info>: '.$email);
         } else {
-            $email = $this->io->ask('Email', null, [$this->validator, 'validateEmail']);
+            $email = $this->io->ask('Email', null, \Closure::fromCallable(fn (?string $email): string => $this->validator->validateEmail($email)));
             $input->setArgument('email', $email);
         }
 
@@ -132,10 +134,9 @@ class AddUserCommand extends Command
         if (null !== $password) {
             $this->io->text(' > <info>Password</info>: '.u('*')->repeat(u($password)->length()));
         } else {
-            $password = $this->io->askHidden('Password (your type will be hidden)', [$this->validator, 'validatePassword']);
+            $password = $this->io->askHidden('Password (your type will be hidden)', \Closure::fromCallable(fn (?string $plainPassword): string => $this->validator->validatePassword($plainPassword)));
             $input->setArgument('password', $password);
         }
-
     }
 
     /**
@@ -151,12 +152,13 @@ class AddUserCommand extends Command
         $plainPassword = $input->getArgument('password');
         $isAdmin = $input->getOption('admin');
         $isSuperAdmin = $input->getOption('super-admin');
-        $role = "ROLE_USER";
-        if($isAdmin){
-            $role = "ROLE_ADMIN";
+        $role = 'ROLE_USER';
+        if ($isAdmin) {
+            $role = 'ROLE_ADMIN';
         }
-        if($isSuperAdmin){
-            $role = "ROLE_SUPER_ADMIN";
+
+        if ($isSuperAdmin) {
+            $role = 'ROLE_SUPER_ADMIN';
         }
 
         // make sure to validate the user data is correct
@@ -184,7 +186,7 @@ class AddUserCommand extends Command
         return Command::SUCCESS;
     }
 
-    private function validateUserData($email, $plainPassword): void
+    private function validateUserData($email, ?string $plainPassword): void
     {
         // first check if a user with the same username already exists.
         $existingUser = $this->repository->findOneBy(['email' => $email]);

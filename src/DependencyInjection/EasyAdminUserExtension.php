@@ -8,13 +8,15 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
-
 class EasyAdminUserExtension extends Extension implements PrependExtensionInterface
 {
+    /**
+     * @param string[] $configs
+     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
-        $config        = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($configuration, $configs);
 
         foreach ($config as $key => $value) {
             $container->setParameter('easy_admin_user.'.$key, $value);
@@ -24,7 +26,7 @@ class EasyAdminUserExtension extends Extension implements PrependExtensionInterf
         $loader->load('services.yaml');
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $configs = $container->getExtensionConfig($this->getAlias());
         $configuration = $this->getConfiguration($configs, $container);
@@ -34,13 +36,14 @@ class EasyAdminUserExtension extends Extension implements PrependExtensionInterf
         $twigConfig = [];
 
         $twigConfig['globals']['easy_admin_user'] = [];
-        foreach ($config as $k=>$v){
+        foreach ($config as $k => $v) {
             $twigConfig['globals']['easy_admin_user'][$k] = $v;
         }
+
         $container->prependExtensionConfig('twig', $twigConfig);
     }
 
-    public function getAlias()
+    public function getAlias(): string
     {
         return 'easy_admin_user';
     }

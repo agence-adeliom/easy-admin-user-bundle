@@ -2,6 +2,7 @@
 
 namespace Adeliom\EasyAdminUserBundle\Controller\Security;
 
+use LogicException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,16 +10,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class EasyAdminSecurityController extends AbstractController
 {
-    /**
-     * @Route("/admin/login", name="easy_admin_login")
-     */
+    #[Route(path: '/admin/login', name: 'easy_admin_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()) {
-             return $this->redirectToRoute('target_path');
+        if (null !== $this->getUser()) {
+            return $this->redirectToRoute('target_path');
         }
-
-
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -47,10 +44,11 @@ class EasyAdminSecurityController extends AbstractController
     }
 
     /**
-     * @Route("/admin/logout", name="easy_admin_logout")
+     * @return never
      */
-    public function logout()
+    #[Route(path: '/admin/logout', name: 'easy_admin_logout')]
+    public function logout(): Response
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 }

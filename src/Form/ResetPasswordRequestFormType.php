@@ -15,11 +15,11 @@ class ResetPasswordRequestFormType extends AbstractType
         $builder
             ->add('email', EmailType::class, [
                 'attr' => ['autocomplete' => 'email'],
-                'label' => "easy_admin_user.form.email",
-                'label_attr' => ["class" => "required"],
+                'label' => 'easy_admin_user.form.email',
+                'label_attr' => ['class' => 'required'],
                 'help' => 'easy_admin_user.reset_password.request_help',
                 'required' => true,
-                'translation_domain' => "messages",
+                'translation_domain' => 'messages',
                 'constraints' => [
                     new NotBlank([
                         'message' => 'easy_admin_user.reset_password.request_error',

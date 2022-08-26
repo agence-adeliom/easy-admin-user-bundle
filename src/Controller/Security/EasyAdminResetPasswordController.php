@@ -5,6 +5,7 @@ namespace Adeliom\EasyAdminUserBundle\Controller\Security;
 use Adeliom\EasyAdminUserBundle\Form\ChangePasswordFormType;
 use Adeliom\EasyAdminUserBundle\Form\ResetPasswordRequestFormType;
 use Adeliom\EasyAdminUserBundle\Repository\UserRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -20,38 +21,44 @@ use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
-/**
- * @Route("/admin/reset-password")
- */
+#[Route(path: '/admin/reset-password')]
 class EasyAdminResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
 
-    private $resetPasswordHelper;
-    private $parameterBag;
-    private $translator;
-    private $repository;
-    private $userClass;
+    /**
+     * @var mixed
+     */
+    private $userClass = null;
 
-    public function __construct(ResetPasswordHelperInterface $resetPasswordHelper, ParameterBagInterface $parameterBag, TranslatorInterface $translator, UserRepository $repository)
-    {
-        $this->resetPasswordHelper = $resetPasswordHelper;
-        $this->parameterBag = $parameterBag;
-        $this->translator = $translator;
-        $this->repository = $repository;
+    public function __construct(/**
+         * @readonly
+         */
+        private ResetPasswordHelperInterface $resetPasswordHelper, /**
+         * @readonly
+         */
+        private ParameterBagInterface $parameterBag, /**
+         * @readonly
+         */
+        private TranslatorInterface $translator, /**
+         * @readonly
+         */
+        private UserRepository $repository, /**
+         * @readonly
+         */
+        private ManagerRegistry $managerRegistry
+    ) {
         $this->userClass = $parameterBag->get('easy_admin_user.user_class');
     }
 
     /**
      * Display & process form to request a password reset.
-     *
-     * @Route("", name="easy_admin_forgot_password_request")
      */
+    #[Route(path: '', name: 'easy_admin_forgot_password_request')]
     public function request(Request $request, MailerInterface $mailer): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             return $this->processSendingPasswordResetEmail(
                 $form->get('email')->getData(),
@@ -66,9 +73,8 @@ class EasyAdminResetPasswordController extends AbstractController
 
     /**
      * Confirmation page after a user has requested a password reset.
-     *
-     * @Route("/check-email", name="easy_admin_check_email")
      */
+    #[Route(path: '/check-email', name: 'easy_admin_check_email')]
     public function checkEmail(): Response
     {
         // Generate a fake token if the user does not exist or someone hit this page directly.
@@ -84,9 +90,8 @@ class EasyAdminResetPasswordController extends AbstractController
 
     /**
      * Validates and process the reset URL that the user clicked in their email.
-     *
-     * @Route("/reset/{token}", name="easy_admin_reset_password")
      */
+    #[Route(path: '/reset/{token}', name: 'easy_admin_reset_password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordEncoder, string $token = null): Response
     {
         if ($token) {
@@ -104,8 +109,8 @@ class EasyAdminResetPasswordController extends AbstractController
 
         try {
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
-        } catch (ResetPasswordExceptionInterface $e) {
-            $this->addFlash('reset_password_error', $e->getReason());
+        } catch (ResetPasswordExceptionInterface $resetPasswordException) {
+            $this->addFlash('reset_password_error', $resetPasswordException->getReason());
 
             return $this->redirectToRoute('easy_admin_forgot_password_request');
         }
@@ -113,7 +118,6 @@ class EasyAdminResetPasswordController extends AbstractController
         // The token is valid; allow the user to change their password.
         $form = $this->createForm(ChangePasswordFormType::class);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             // A password reset token should be used only once, remove it.
             $this->resetPasswordHelper->removeResetRequest($token);
@@ -125,7 +129,7 @@ class EasyAdminResetPasswordController extends AbstractController
             );
 
             $user->setPassword($encodedPassword);
-            $this->getDoctrine()->getManager()->flush();
+            $this->managerRegistry->getManager()->flush();
 
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
@@ -144,13 +148,13 @@ class EasyAdminResetPasswordController extends AbstractController
             'email' => $emailFormData,
         ]);
         // Do not reveal whether a user account was found or not.
-        if (!$user) {
+        if (!$user instanceof \Adeliom\EasyAdminUserBundle\Entity\User) {
             return $this->redirectToRoute('easy_admin_check_email');
         }
 
         try {
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
-        } catch (ResetPasswordExceptionInterface $e) {
+        } catch (ResetPasswordExceptionInterface) {
             // If you want to tell the user why a reset email was not sent, uncomment
             // the lines below and change the redirect to 'easy_forgot_password_request'.
             // Caution: This may reveal if a user is registered or not.
@@ -166,9 +170,9 @@ class EasyAdminResetPasswordController extends AbstractController
         $config = $this->parameterBag->get('easy_admin_user.reset_password');
 
         $email = (new TemplatedEmail())
-            ->from(new Address($config["from_address"], $config["from_name"]))
+            ->from(new Address($config['from_address'], $config['from_name']))
             ->to($user->getEmail())
-            ->subject( $this->translator->trans('easy_admin_user.reset_password.subject'))
+            ->subject($this->translator->trans('easy_admin_user.reset_password.subject'))
             ->htmlTemplate('@EasyAdminUser/reset_password/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,

@@ -1,14 +1,9 @@
 {
     "name": "agence-adeliom/easy-admin-user-bundle",
     "type": "symfony-bundle",
-    "version": "1.0.0",
     "description": "A Symfony bundle for EasyAdmin that provide basic user authentification flow",
     "keywords": ["symfony", "easyadmin", "user"],
     "homepage": "https://github.com/agence-adeliom/easy-admin-user-bundle",
-    "support": {
-        "issues": "https://github.com/agence-adeliom/easy-admin-user-bundle/issues",
-        "source": "https://github.com/agence-adeliom/easy-admin-user-bundle"
-    },
     "license": "MIT",
     "authors": [
         {
@@ -17,25 +12,39 @@
         }
     ],
     "require": {
-        "php": "^7.4|^8.0",
+        "php": ">=8.0.2",
         "ext-json": "*",
-        "symfony/config": "^4.4 || ^5.2",
-        "symfony/dependency-injection": "^4.4 || ^5.2",
-        "symfony/deprecation-contracts": "^2.2 || ^v3.0.0",
-        "symfony/event-dispatcher": "^4.4 || ^5.2",
-        "symfony/form": "^4.4 || ^5.2",
-        "symfony/framework-bundle": "^4.4 || ^5.2",
-        "symfony/http-kernel": "^4.4 || ^5.2",
-        "symfony/options-resolver": "^4.4 || ^5.2",
-        "symfony/property-access": "^4.4 || ^5.2",
-        "symfony/validator": "^4.4 || ^5.2",
-        "easycorp/easyadmin-bundle": "^3.4 || ^v4.0.0",
-        "agence-adeliom/easy-common-bundle": "^1.0",
+        "symfony/config": "^5.4 || ^6.0",
+        "symfony/dependency-injection": "^5.4 || ^6.0",
+        "symfony/form": "^5.4 || ^6.0",
+        "symfony/http-kernel": "^5.4 || ^6.0",
+        "symfony/mailer": "^5.4 || ^6.0",
+        "symfony/mime": "^5.4 || ^6.0",
+        "symfony/options-resolver": "^5.4 || ^6.0",
+        "symfony/password-hasher": "^5.4 || ^6.0",
+        "symfony/validator": "^5.4 || ^6.0",
+        "symfony/stopwatch": "^5.4 || ^6.0",
+        "easycorp/easyadmin-bundle": "^3.4 || ^v4.0",
+        "agence-adeliom/easy-common-bundle": "^6.1",
         "symfonycasts/reset-password-bundle": "^1.8"
     },
     "autoload": {
         "psr-4": {
             "Adeliom\\EasyAdminUserBundle\\": "src/"
         }
+    },
+    "conflict": {
+        "agence-adeliom/easy-faq-bundle": "<6.0.1",
+        "agence-adeliom/easy-seo-bundle": "<6.0.1",
+        "agence-adeliom/easy-config-bundle": "<6.0.1",
+        "agence-adeliom/easy-redirect-bundle": "<6.0.1",
+        "agence-adeliom/easy-blog-bundle": "<6.0.1",
+        "agence-adeliom/easy-media-bundle": "<6.0.1",
+        "agence-adeliom/easy-fields-bundle": "<6.0.1",
+        "agence-adeliom/easy-menu-bundle": "<6.0.1",
+        "agence-adeliom/easy-page-bundle": "<6.0.1",
+        "agence-adeliom/easy-block-bundle": "<6.0.1",
+        "agence-adeliom/easy-editor-bundle": "<6.0.1",
+        "agence-adeliom/easy-gutenberg-bundle": "<6.0.1"
     }
 }

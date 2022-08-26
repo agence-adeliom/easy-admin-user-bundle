@@ -74,15 +74,6 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
 ```
 
-## Setup the builtin routes
-
-create a file `easy_admin_user.yaml` in the `config/routes` folder of your app and add the following lines
-
-```yaml
-easy_admin_user:
-    resource: '@EasyAdminUserBundle/Resources/config/routes.yaml'
-```
-
 # Create a user
 
 ```bash

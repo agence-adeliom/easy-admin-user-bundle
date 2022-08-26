@@ -13,20 +13,22 @@ use Doctrine\ORM\Mapping\ClassMetadata;
  */
 class DoctrineMappingListener implements EventSubscriber
 {
-    /**
-     * @var string
-     */
-    private $userClass;
-    private $resetClass;
-
-
-    public function __construct(string $userClass, string $resetClass)
-    {
-        $this->userClass = $userClass;
-        $this->resetClass = $resetClass;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $userClass,
+        /**
+         * @readonly
+         */
+        private string $resetClass
+    ) {
     }
 
-    public function getSubscribedEvents()
+    /**
+     * @return string[]
+     */
+    public function getSubscribedEvents(): array
     {
         return [Events::loadClassMetadata];
     }
