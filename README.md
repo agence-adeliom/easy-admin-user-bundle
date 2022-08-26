@@ -14,7 +14,24 @@ Provide a basic integration of user authentification and password reset in Easya
 - A Easyadmin CRUD interface to manage users
 
 
-## Installation
+## Installation with Symfony Flex
+
+Add our recipes endpoint
+
+```json
+{
+  "extra": {
+    "symfony": {
+      "endpoint": [
+        "https://api.github.com/repos/agence-adeliom/symfony-recipes/contents/index.json?ref=flex/main",
+        ...
+        "flex://defaults"
+      ],
+      "allow-contrib": true
+    }
+  }
+}
+```
 
 Install with composer
 
