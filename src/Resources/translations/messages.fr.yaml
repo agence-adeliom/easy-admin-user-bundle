@@ -21,7 +21,7 @@ easy_admin_user:
     request_button: Envoyer la demande
     reset_button: Réinitialiser
     new_password: Nouveau mot de passe
-    comfirm_new_password: Comfirmation du mot de passe
+    confirm_new_password: Confirmation du mot de passe
     subject: Réinitialisation de votre mot de passe
     check_email_message: |
       S'il existe un compte correspondant à votre e-mail, un e-mail vient d'être envoyé contenant un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.<br>
