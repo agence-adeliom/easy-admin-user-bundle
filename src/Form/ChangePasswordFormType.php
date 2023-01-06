@@ -33,7 +33,7 @@ class ChangePasswordFormType extends AbstractType
                 ],
                 'second_options' => [
                     'attr' => ['autocomplete' => 'new-password'],
-                    'label' => 'easy_admin_user.reset_password.comfirm_new_password',
+                    'label' => 'easy_admin_user.reset_password.confirm_new_password',
                 ],
                 'invalid_message' => 'easy_admin_user.reset_password.not_match',
                 'mapped' => false,

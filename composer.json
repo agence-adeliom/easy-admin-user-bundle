@@ -2,7 +2,11 @@
     "name": "agence-adeliom/easy-admin-user-bundle",
     "type": "symfony-bundle",
     "description": "A Symfony bundle for EasyAdmin that provide basic user authentification flow",
-    "keywords": ["symfony", "easyadmin", "user"],
+    "keywords": [
+        "symfony",
+        "easyadmin",
+        "user"
+    ],
     "homepage": "https://github.com/agence-adeliom/easy-admin-user-bundle",
     "license": "MIT",
     "authors": [
@@ -25,7 +29,7 @@
         "symfony/validator": "^5.4 || ^6.0",
         "symfony/stopwatch": "^5.4 || ^6.0",
         "easycorp/easyadmin-bundle": "^3.4 || ^v4.0",
-        "agence-adeliom/easy-common-bundle": "^2.1",
+        "agence-adeliom/easy-common-bundle": "^2.0.17",
         "symfonycasts/reset-password-bundle": "^1.8"
     },
     "autoload": {
