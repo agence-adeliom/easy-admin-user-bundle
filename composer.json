@@ -29,7 +29,7 @@
         "symfony/validator": "^5.4 || ^6.0",
         "symfony/stopwatch": "^5.4 || ^6.0",
         "easycorp/easyadmin-bundle": "^3.4 || ^v4.0",
-        "agence-adeliom/easy-common-bundle": "^2.0.31",
+        "agence-adeliom/easy-common-bundle": "^2.1",
         "symfonycasts/reset-password-bundle": "^1.8"
     },
     "autoload": {
