@@ -92,7 +92,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
     {
         $currentUser = $this->getUser();
         $context = $this->adminContextProvider->getContext();
-        $subject = $context->getEntity()->getInstance();
+        $subject = $context?->getEntity()->getInstance();
         $roles = $this->parameterBag->get('security.role_hierarchy.roles');
         $rolesChoices = [];
         foreach ($roles as $role => $sub) {
@@ -143,7 +143,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
             throw new HttpException(Response::HTTP_UNAUTHORIZED);
         }
 
-        $user = $context->getEntity()->getInstance();
+        $user = $context?->getEntity()->getInstance();
         $referer = $context->getRequest()->headers->get('referer');
         /** @var UserInterface $user */
         if ($user) {
