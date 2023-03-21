@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[UniqueEntity('email')]
 #[ORM\HasLifecycleCallbacks]
@@ -28,30 +29,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::BOOLEAN)]
-    private ?bool $enabled = true;
+    protected ?bool $enabled = true;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
-    private ?string $firstname = null;
+    protected ?string $firstname = null;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, nullable: true)]
-    private ?string $lastname = null;
+    protected ?string $lastname = null;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING, length: 255, unique: true)]
-    private ?string $email = null;
+    protected ?string $email = null;
 
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::JSON)]
-    private array $roles = [];
+    protected array $roles = [];
 
     /**
      * @var string|null The plain password
      */
-    private ?string $plainPassword = null;
+    #[Assert\Regex(
+        pattern: '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,32}$/',
+        message: "Le mot de passe doit respecter des exigences de complexité.",
+    )]
+    #[Assert\NotCompromisedPassword]
+    protected ?string $plainPassword = null;
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING)]
-    private ?string $password = null;
+    protected ?string $password = null;
 
     public function getId(): ?int
     {

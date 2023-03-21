@@ -15,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -29,19 +30,19 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         /**
          * @readonly
          */
-        private AdminContextProvider $adminContextProvider,
+        protected AdminContextProvider $adminContextProvider,
         /**
          * @readonly
          */
-        private ParameterBagInterface $parameterBag,
+        protected ParameterBagInterface $parameterBag,
         /**
          * @readonly
          */
-        private RoleHierarchyInterface $roleHierarchy,
+        protected RoleHierarchyInterface $roleHierarchy,
         /**
          * @readonly
          */
-        private TranslatorInterface $translator
+        protected TranslatorInterface $translator
     ) {
     }
 
@@ -107,7 +108,18 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         yield TextField::new('firstname', 'easy_admin_user.form.firstname')->setColumns('col-12 col-sm-6');
         yield TextField::new('lastname', 'easy_admin_user.form.lastname')->setColumns('col-12 col-sm-6');
         yield EmailField::new('email', 'easy_admin_user.form.email')->setRequired(true)->setColumns('col-12 col-sm-6');
-        yield TextField::new('plainPassword', 'easy_admin_user.form.password')->setRequired(Crud::PAGE_NEW == $pageName)->setColumns('col-12 col-sm-6')->onlyOnForms();
+        yield TextField::new('plainPassword', 'easy_admin_user.form.password')
+            ->setFormType(PasswordType::class)
+            ->setRequired(Crud::PAGE_NEW == $pageName)
+            ->setColumns('col-12 col-sm-6')
+            ->setHelp('<ul>
+<li>Au moins un chiffre <code>0-9</code></li>
+<li>Au moins un caractère minuscule <code>a-z</code></li>
+<li>Au moins un caractère majuscule <code>A-Z</code></li>
+<li>Au moins un caractère spécial <code>#?!@$%^&*-</code></li>
+<li>Au moins <code>8</code> caractères, mais pas plus de <code>32</code>.</li>
+</ul>')
+            ->onlyOnForms();
 
         if (!$subject || (Crud::PAGE_DETAIL == $pageName) || (Crud::PAGE_NEW == $pageName) || (Crud::PAGE_EDIT == $pageName && $currentUser->getUserIdentifier() !== $subject->getEmail())) {
             yield BooleanField::new('enabled', 'easy_admin_user.form.enabled')->renderAsSwitch(Crud::PAGE_INDEX != $pageName)->setColumns('col-12 col-sm-6');
