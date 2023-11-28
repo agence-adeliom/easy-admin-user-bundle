@@ -5,6 +5,7 @@ namespace Adeliom\EasyAdminUserBundle\Command;
 use Adeliom\EasyAdminUserBundle\Repository\UserRepository;
 use Adeliom\EasyAdminUserBundle\Utils\Validator;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -37,15 +38,9 @@ use function Symfony\Component\String\u;
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
  * @author Yonel Ceruto <yonelceruto@gmail.com>
  */
+#[AsCommand(name: 'easy-admin:add-user')]
 class AddUserCommand extends Command
 {
-    // to make your command lazily loaded, configure the $defaultName static property,
-    // so it will be instantiated only when the command is actually called.
-    /**
-     * @var string
-     */
-    protected static $defaultName = 'easy-admin:add-user';
-
     private ?SymfonyStyle $io = null;
 
     public function __construct(/**
