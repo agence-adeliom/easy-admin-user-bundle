@@ -22,7 +22,7 @@ class EasyAdminSecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        return $this->render('@EasyAdminUser/login.html.twig', [
+        return $this->render('@EasyAdmin/page/login.html.twig', [
             'error' => $error,
             'last_username' => $lastUsername,
             'translation_domain' => 'messages',

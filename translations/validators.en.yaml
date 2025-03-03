@@ -1,0 +1,6 @@
+easy_admin_user:
+  reset_password:
+    request_error: "Please enter your email address"
+    not_match: "Passwords do not match"
+    blank: "Please enter your password"
+    limit: "Your password must be at least {{ limit }} characters long"

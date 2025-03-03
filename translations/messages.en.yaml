@@ -1,0 +1,43 @@
+anglais:
+  easy_admin_user:
+    manage_users: "Manage administrators"
+    new_user: "New administrator"
+    edit_user: "Edit administrator"
+    user: "Administrator"
+    users: "Administrators"
+    my_profile: "My account"
+    impersonate: "View as this user"
+    form:
+      firstname: "First name"
+      lastname: "Last name"
+      email: "Email address"
+      password: "Password"
+      enabled: "Enabled"
+      roles: "Roles"
+    reset_password:
+      reset: "Reset your password"
+      check_email: "Password reset email sent"
+      request_help: "Enter your email address and we will send you a link to reset your password."
+      request_error: "Please enter your email"
+      request_button: "Send request"
+      reset_button: "Reset"
+      new_password: "New password"
+      confirm_new_password: "Confirm new password"
+      subject: "Password reset"
+      check_email_message: |
+        If an account matching your email exists, a message has just been sent containing a link you can use to reset your password.<br>
+        This link will expire in <b>%expiration%</b>.
+      check_email_message_infos: |
+        If you do not receive an email, please check your spam folder or <a href="%link%">try again</a>.
+    login:
+      title: "Login"
+      username: "Username"
+      password: "Password"
+      forgot_password: "Forgot password"
+      login: "Log in"
+      remember_me: "Remember me"
+    flashes:
+      impersonate: "You are now viewing the admin interface as %name%."
+
+  ROLE_ADMIN: "Administrator"
+  ROLE_SUPER_ADMIN: "Super Administrator"

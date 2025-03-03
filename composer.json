@@ -35,5 +35,15 @@
         "psr-4": {
             "Adeliom\\EasyAdminUserBundle\\": "src/"
         }
-    }
+    },
+    "minimum-stability" : "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../easy-common-bundle",
+            "options": {
+                "symlink": true
+            }
+        }
+    ]
 }

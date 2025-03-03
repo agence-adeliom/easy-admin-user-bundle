@@ -27,22 +27,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 abstract class EasyAdminUserCrudController extends AbstractCrudController
 {
     public function __construct(
-        /**
-         * @readonly
-         */
-        protected AdminContextProvider $adminContextProvider,
-        /**
-         * @readonly
-         */
-        protected ParameterBagInterface $parameterBag,
-        /**
-         * @readonly
-         */
-        protected RoleHierarchyInterface $roleHierarchy,
-        /**
-         * @readonly
-         */
-        protected TranslatorInterface $translator
+        protected readonly AdminContextProvider $adminContextProvider,
+        protected readonly ParameterBagInterface $parameterBag,
+        protected readonly RoleHierarchyInterface $roleHierarchy,
+        protected readonly TranslatorInterface $translator
     ) {
     }
 
@@ -75,7 +63,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
 
         $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
         $actions->update(Crud::PAGE_INDEX, Action::DELETE, static function (Action $action) use ($currentUser): Action {
-            $action->displayIf(static fn (User $entity): bool => $currentUser->getUserIdentifier() !== $entity->getEmail());
+            $action->displayIf(static fn (?User $entity): bool => $currentUser?->getUserIdentifier() !== $entity?->getEmail());
 
             return $action;
         });
