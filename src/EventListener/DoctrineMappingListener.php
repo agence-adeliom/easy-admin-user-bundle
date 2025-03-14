@@ -16,14 +16,8 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 class DoctrineMappingListener
 {
     public function __construct(
-        /**
-         * @readonly
-         */
-        private string $userClass,
-        /**
-         * @readonly
-         */
-        private string $resetClass
+        private readonly string $userClass,
+        private readonly string $resetClass
     ) {
     }
 

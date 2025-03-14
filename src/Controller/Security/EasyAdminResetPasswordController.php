@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
@@ -31,22 +31,12 @@ class EasyAdminResetPasswordController extends AbstractController
      */
     private $userClass = null;
 
-    public function __construct(/**
-         * @readonly
-         */
-        private ResetPasswordHelperInterface $resetPasswordHelper, /**
-         * @readonly
-         */
-        private ParameterBagInterface $parameterBag, /**
-         * @readonly
-         */
-        private TranslatorInterface $translator, /**
-         * @readonly
-         */
-        private UserRepository $repository, /**
-         * @readonly
-         */
-        private ManagerRegistry $managerRegistry
+    public function __construct(
+        private readonly ResetPasswordHelperInterface $resetPasswordHelper,
+        private readonly ParameterBagInterface $parameterBag,
+        private readonly TranslatorInterface $translator,
+        private readonly UserRepository $repository,
+        private readonly ManagerRegistry $managerRegistry,
     ) {
         $this->userClass = $parameterBag->get('easy_admin_user.user_class');
     }
