@@ -36,7 +36,7 @@
             "Adeliom\\EasyAdminUserBundle\\": "src/"
         }
     },
-    "minimum-stability": "alpha",
+    "minimum-stability": "dev",
     "repositories": [
         {
             "type": "path",
