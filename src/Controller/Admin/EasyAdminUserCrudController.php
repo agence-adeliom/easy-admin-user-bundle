@@ -98,7 +98,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         yield EmailField::new('email', 'easy_admin_user.form.email')->setRequired(true)->setColumns('col-12 col-sm-6');
         yield TextField::new('plainPassword', 'easy_admin_user.form.password')
             ->setFormType(PasswordType::class)
-            ->setRequired(Crud::PAGE_NEW == $pageName)
+            ->setRequired(Crud::PAGE_NEW === $pageName)
             ->setColumns('col-12 col-sm-6')
             ->setHelp('<ul>
 <li>Au moins un chiffre <code>0-9</code></li>
@@ -109,8 +109,8 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
 </ul>')
             ->onlyOnForms();
 
-        if (!$subject || (Crud::PAGE_DETAIL == $pageName) || (Crud::PAGE_NEW == $pageName) || (Crud::PAGE_EDIT == $pageName && $currentUser->getUserIdentifier() !== $subject->getEmail())) {
-            yield BooleanField::new('enabled', 'easy_admin_user.form.enabled')->renderAsSwitch(Crud::PAGE_INDEX != $pageName)->setColumns('col-12 col-sm-6');
+        if (!$subject || (Crud::PAGE_DETAIL === $pageName) || (Crud::PAGE_NEW === $pageName) || (Crud::PAGE_EDIT === $pageName && $currentUser->getUserIdentifier() !== $subject->getEmail())) {
+            yield BooleanField::new('enabled', 'easy_admin_user.form.enabled')->renderAsSwitch(Crud::PAGE_INDEX !== $pageName)->setColumns('col-12 col-sm-6');
             yield ChoiceField::new('roles', 'easy_admin_user.form.roles')->setColumns('col-12 col-sm-6')
                 ->setRequired(true)
                 ->allowMultipleChoices()
@@ -147,7 +147,7 @@ abstract class EasyAdminUserCrudController extends AbstractCrudController
         $referer = $context->getRequest()->headers->get('referer');
         /** @var UserInterface $user */
         if ($user) {
-            $referer .= $referer.(parse_url($referer, PHP_URL_QUERY) ? '&' : '?').'_switch_user='.$user->getUserIdentifier();
+            $referer .= $referer.(parse_url((string) $referer, PHP_URL_QUERY) ? '&' : '?').'_switch_user='.$user->getUserIdentifier();
             $this->addFlash('success', $this->translator->trans(
                 'easy_admin_user.flashes.impersonate',
                 [

@@ -47,7 +47,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string|null The plain password
      */
     #[Assert\Regex(
-        pattern: '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,32}$/',
+        pattern: '/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?\d)(?=.*?[#?!@$%^&*-]).{8,32}$/',
         message: "Le mot de passe doit respecter des exigences de complexité.",
     )]
     #[Assert\NotCompromisedPassword]

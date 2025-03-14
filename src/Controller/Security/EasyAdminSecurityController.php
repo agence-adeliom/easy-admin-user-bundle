@@ -13,7 +13,7 @@ class EasyAdminSecurityController extends AbstractController
     #[Route(path: '/admin/login', name: 'easy_admin_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if (null !== $this->getUser()) {
+        if ($this->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             return $this->redirectToRoute('target_path');
         }
 

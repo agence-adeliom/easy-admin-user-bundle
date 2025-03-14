@@ -16,7 +16,7 @@ class Validator
 {
     public function validateUsername(?string $username): string
     {
-        if (empty($username)) {
+        if ($username === null || $username === '' || $username === '0') {
             throw new InvalidArgumentException('The username can not be empty.');
         }
 
@@ -29,7 +29,7 @@ class Validator
 
     public function validatePassword(?string $plainPassword): string
     {
-        if (empty($plainPassword)) {
+        if ($plainPassword === null || $plainPassword === '' || $plainPassword === '0') {
             throw new InvalidArgumentException('The password can not be empty.');
         }
 
@@ -42,7 +42,7 @@ class Validator
 
     public function validateEmail(?string $email): string
     {
-        if (empty($email)) {
+        if ($email === null || $email === '' || $email === '0') {
             throw new InvalidArgumentException('The email can not be empty.');
         }
 
@@ -55,7 +55,7 @@ class Validator
 
     public function validateFullName(?string $fullName): string
     {
-        if (empty($fullName)) {
+        if ($fullName === null || $fullName === '' || $fullName === '0') {
             throw new InvalidArgumentException('The full name can not be empty.');
         }
 
