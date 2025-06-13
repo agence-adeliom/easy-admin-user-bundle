@@ -20,14 +20,8 @@ class ChangePasswordFormType extends AbstractType
                 'first_options' => [
                     'attr' => ['autocomplete' => 'new-password'],
                     'constraints' => [
-                        new NotBlank([
-                            'message' => 'easy_admin_user.reset_password.blank',
-                        ]),
-                        new Length([
-                            'min' => 6,
-                            'minMessage' => 'easy_admin_user.reset_password.limit',
-                            'max' => 4096,
-                        ]),
+                        new NotBlank(message: 'easy_admin_user.reset_password.blank'),
+                        new Length(min: 6, minMessage: 'easy_admin_user.reset_password.limit', max: 4096),
                     ],
                     'label' => 'easy_admin_user.reset_password.new_password',
                 ],

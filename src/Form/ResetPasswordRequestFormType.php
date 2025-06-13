@@ -21,9 +21,7 @@ class ResetPasswordRequestFormType extends AbstractType
                 'required' => true,
                 'translation_domain' => 'messages',
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'easy_admin_user.reset_password.request_error',
-                    ]),
+                    new NotBlank(message: 'easy_admin_user.reset_password.request_error'),
                 ],
             ])
         ;
