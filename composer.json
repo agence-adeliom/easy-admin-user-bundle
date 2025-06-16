@@ -39,11 +39,8 @@
     "minimum-stability": "dev",
     "repositories": [
         {
-            "type": "path",
-            "url": "../easy-common-bundle",
-            "options": {
-                "symlink": true
-            }
+            "type": "vcs",
+            "url": "git@github.com:agence-adeliom/easy-common-bundle"
         }
     ]
 }
