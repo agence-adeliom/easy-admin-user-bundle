@@ -10,11 +10,11 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class EasyAdminSecurityController extends AbstractController
 {
-    #[Route(path: '/admin/login', name: 'easy_admin_login')]
+    #[Route(path: '{_locale}/admin/login', name: 'easy_admin_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
-            return $this->redirectToRoute('target_path');
+            return $this->redirectToRoute('admin');
         }
 
         // get the login error if there is one
@@ -46,9 +46,9 @@ class EasyAdminSecurityController extends AbstractController
     /**
      * @return never
      */
-    #[Route(path: '/admin/logout', name: 'easy_admin_logout')]
+    #[Route(path: '{_locale}/admin/logout', name: 'easy_admin_logout')]
     public function logout(): Response
     {
-        throw new LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        return $this->redirectToRoute('easy_admin_login');
     }
 }

@@ -103,5 +103,6 @@ bin/console easy-admin:add-user
 ## Authors
 
 - [@arnaud-ritti](https://github.com/arnaud-ritti)
+- [@jeandaviddaviet](https://github.com/JeanDavidDaviet)
 
   
