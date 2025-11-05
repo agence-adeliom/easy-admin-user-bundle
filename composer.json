@@ -28,7 +28,7 @@
         "symfony/validator": "^6.4 || ^7.0",
         "symfony/stopwatch": "^6.4 || ^7.0",
         "easycorp/easyadmin-bundle": "^3.4 || ^v4.0",
-        "agence-adeliom/easy-common-bundle": "^3.x-dev",
+        "agence-adeliom/easy-common-bundle": "^3.0",
         "symfonycasts/reset-password-bundle": "^1.0"
     },
     "autoload": {
