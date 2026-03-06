@@ -59,6 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: \Doctrine\DBAL\Types\Types::STRING)]
     protected ?string $password = null;
 
+    /** @codeCoverageIgnore  */
     public function getId(): ?int
     {
         return $this->id;
